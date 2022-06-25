@@ -1,4 +1,5 @@
 package weather.api.domain.value;
 
-public enum THINGS_ENUM {
+public enum ThingsEnum {
+    BOAT, UMBRELLA,HAT_OR_GLOVES
 }

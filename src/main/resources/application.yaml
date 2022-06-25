@@ -1,2 +1,25 @@
+server:
+  port: 8000
+meteoblue:
+  apiKey: dTEc0mrKpFxz8jqy
 
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    url: jdbc:postgresql://database-2.cvwygnptvbbt.us-east-1.rds.amazonaws.com:5432/postgres
+    password: postgres
 
+  jpa:
+    hibernate:
+      ddl-auto: update
+      properties:
+        hibernate:
+          jdbc:
+            lob:
+              non_contextual_creation: true
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          temp:
+            use_jdbc_metadata_defaults: false
+      show-sql: false
+      database: postgresql
