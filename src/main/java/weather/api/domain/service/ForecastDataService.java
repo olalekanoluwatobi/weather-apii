@@ -101,24 +101,32 @@ public class ForecastDataService {
 
 
         if(isDay) {
-
-
-            return createPayloadforDay(dateTimeString);
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+            DateTime dt = formatter.parseDateTime(dateTimeString);
+            Optional<ForecastDataDay> forecastDataDayOptional=forecastDataDayRepository.findByTime(dt);
+            if(forecastDataDayOptional.isEmpty()){
+                throw new Exception("value not found");
+            }
+            ForecastDataDay forecastDataDay=forecastDataDayOptional.get();
+            return createPayloadforDay(forecastDataDay);
 
         }
         else {
-            return createPayloadForOneHour(dateTimeString);
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+            DateTime dt = formatter.parseDateTime(dateTimeString);
+            Optional<ForecastDataOneHour> forecastDataOneHourOptional=forecastDataOneHourRepository.findByTime(dt);
+            if(forecastDataOneHourOptional.isEmpty()){
+                throw new Exception("value not found");
+            }
+            ForecastDataOneHour forecastDataOneHour=forecastDataOneHourOptional.get();
+            return createPayloadForOneHour(forecastDataOneHour);
         }
     }
-    private WeatherResponsePayload createPayloadforDay(String dateTimeString) throws Exception {
+    private WeatherResponsePayload createPayloadforDay(ForecastDataDay forecastDataDay) throws Exception {
 
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        DateTime dt = formatter.parseDateTime(dateTimeString);
-        Optional<ForecastDataDay> forecastDataDayOptional=forecastDataDayRepository.findByTime(dt);
-        if(forecastDataDayOptional.isEmpty()){
-            throw new Exception("value not found");
-        }
-        ForecastDataDay forecastDataDay=forecastDataDayOptional.get();
+
+
+
         WeatherResponsePayload weatherResponsePayload=new WeatherResponsePayload();
         weatherResponsePayload.setDateTime(forecastDataDay.getTime());
         weatherResponsePayload.setTemperature(forecastDataDay.getTemperature());
@@ -137,14 +145,8 @@ public class ForecastDataService {
         return weatherResponsePayload;
     }
 
-    private WeatherResponsePayload createPayloadForOneHour(String dateTimeString) throws Exception {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
-        DateTime dt = formatter.parseDateTime(dateTimeString);
-        Optional<ForecastDataOneHour> forecastDataOneHourOptional=forecastDataOneHourRepository.findByTime(dt);
-        if(forecastDataOneHourOptional.isEmpty()){
-            throw new Exception("value not found");
-        }
-        ForecastDataOneHour forecastDataOneHour=forecastDataOneHourOptional.get();
+    private WeatherResponsePayload createPayloadForOneHour(ForecastDataOneHour forecastDataOneHour) throws Exception {
+
         WeatherResponsePayload weatherResponsePayload=new WeatherResponsePayload();
         weatherResponsePayload.setDateTime(forecastDataOneHour.getTime());
         weatherResponsePayload.setTemperature(forecastDataOneHour.getTemperature());
