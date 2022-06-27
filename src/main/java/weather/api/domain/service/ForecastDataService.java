@@ -21,6 +21,8 @@ import weather.api.domain.repository.ForecastDataDayRepository;
 import weather.api.domain.repository.ForecastDataOneHourRepository;
 import weather.api.domain.value.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -96,6 +98,18 @@ public class ForecastDataService {
         return meteoBlueForecastData;
     }
 
+    public List<WeatherResponsePayload> processDataForDateTimeInterval(String dateTime1,String dateTime2) throws Exception {
+        ArrayList<WeatherResponsePayload> weatherResponsePayloads=new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        DateTime dt1 = formatter.parseDateTime(dateTime1);
+        DateTime dt2=formatter.parseDateTime(dateTime2);
+        List<ForecastDataDay> forecastDataDays  =forecastDataDayRepository.findAllByTimeBetween(dt1,dt2);
+        for (ForecastDataDay forecastDataDay :
+             forecastDataDays) {
+            weatherResponsePayloads.add(createPayloadforDay(forecastDataDay));
+        }
+        return weatherResponsePayloads;
+    }
 
     public WeatherResponsePayload processPayloadForDateTime(String dateTimeString, boolean isDay) throws Exception {
 

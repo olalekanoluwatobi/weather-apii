@@ -12,6 +12,8 @@ import weather.api.domain.service.ForecastDataService;
 import weather.api.domain.value.MeteoBlueForecastData;
 import weather.api.domain.value.WeatherResponsePayload;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/api/v1/forecast")
 public class ForecastDataController {
@@ -36,5 +38,13 @@ public class ForecastDataController {
     public ResponseEntity<WeatherResponsePayload> getWeatherReportForTime(@RequestParam String dateTime) throws Exception {
         return new ResponseEntity<>(forecastDataService.processPayloadForDateTime(dateTime, false), HttpStatus.OK);
     }
+
+    @GetMapping("timeIntervals")
+    public ResponseEntity<List<WeatherResponsePayload>> getWeatherReportForDateTimeIntervals(
+            @RequestParam String dateTime1,
+            @RequestParam String dateTime2) throws Exception {
+        return  new ResponseEntity<>(forecastDataService.processDataForDateTimeInterval(dateTime1,dateTime2),HttpStatus.OK);
+    }
+
 
 }
